@@ -1,0 +1,13 @@
+Projekt na Programowanie Obiektowe PUT Poznań
+------------------------------------------------
+Zadania:
+Hubert:
+  -zrobic dokumentacje i diagram
+Piotrek J:
+  -
+Piotrek D:
+  -
+------------------------------------------------
+
+Karta ocen: 
+https://ekursy.put.poznan.pl/pluginfile.php/3596677/mod_resource/content/0/Specyfikacja%20projektu.pdf
