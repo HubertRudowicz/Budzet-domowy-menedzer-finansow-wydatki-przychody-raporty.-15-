@@ -19,8 +19,8 @@ namespace projekttest.Forms
         public DateTime Date => dtpDate.Value;
         public decimal Amount => nudAmount.Value;
         public string IncomeSource => txtDescription.Text;
-        public string Person => cmbPerson.SelectedItem?.ToString() ?? "";
-        public string Category => cmbCategory.SelectedItem?.ToString() ?? Models.SystemCategories.Other;
+        public Person Person => cmbPerson.SelectedItem as Person;
+        public Category Category => cmbCategory.SelectedItem as Category ?? new Category("Inne", true);
         public bool isRecurring => chkRecurring.Checked;
         public FormAddIncome()
         {
@@ -97,8 +97,8 @@ namespace projekttest.Forms
                 _incomeToEdit.Date = dtpDate.Value;
                 _incomeToEdit.Amount = nudAmount.Value;
                 _incomeToEdit.Source = txtDescription.Text;
-                _incomeToEdit.Person = cmbPerson.SelectedItem?.ToString();
-                _incomeToEdit.Category = cmbCategory.SelectedItem?.ToString();
+                _incomeToEdit.Person = cmbPerson.SelectedItem as Person;
+                _incomeToEdit.Category = cmbCategory.SelectedItem as Category ?? new Category("Inne", true);
                 _incomeToEdit.isRecurring = chkRecurring.Checked;
             }
 

@@ -15,21 +15,25 @@ namespace projekttest.UserControls
 {
     public partial class UserControlIncome : UserControl
     {
+        private Managers.FinanceManager _financeManager;
         public UserControlIncome()
         {
             InitializeComponent();
-            SetupDataGridViewStyle();
+            _financeManager = new Managers.FinanceManager();
 
             dgvExpenses.AutoGenerateColumns = false;
 
-            RefreshData();
             SetupDataGridViewStyle();
+            RefreshData();
         }
 
         private void RefreshData()
         {
             dgvExpenses.DataSource = null;
-            var sortedList = GlobalData.AllIncomes.OrderByDescending(x => x.Date).ToList();
+            var sortedList = _financeManager.GetRecentTransactions(1000, TimePeriod.AllTime)
+                .OfType<Income>()
+                .OrderByDescending(x => x.Date)
+                .ToList();
 
             dgvExpenses.DataSource = sortedList;
 
@@ -143,7 +147,7 @@ namespace projekttest.UserControls
                         Category = form.Category,
                         isRecurring = form.isRecurring
                     };
-                    GlobalData.AllIncomes.Add(newIncome);
+                    _financeManager.AddTransaction(newIncome);
                     RefreshData();
                 }
             }
@@ -179,7 +183,7 @@ namespace projekttest.UserControls
                 if (confirm == DialogResult.Yes)
                 {
                     var selected = (Income)dgvExpenses.SelectedRows[0].DataBoundItem;
-                    GlobalData.AllIncomes.Remove(selected);
+                    _financeManager.DeleteTransaction(selected);
                     RefreshData();
                 }
             }
@@ -195,10 +199,11 @@ namespace projekttest.UserControls
                 return;
             }
 
-            var filtredList = GlobalData.AllIncomes.Where(x =>
+            var allIncomes = _financeManager.GetAllIncomes();
+            var filtredList = allIncomes.Where(x =>
                 (x.Source != null && x.Source.ToLower().Contains(searchText)) ||
-                (x.Category != null && x.Category.ToLower().Contains(searchText)) ||
-                (x.Person != null && x.Person.ToLower().Contains(searchText)) ||
+                (x.Category != null && x.Category.Name.ToLower().Contains(searchText)) ||
+                (x.Person != null && x.Person.Name.ToLower().Contains(searchText)) ||
                 x.Amount.ToString().Contains(searchText)
             ).OrderByDescending(x => x.Date).ToList();
 

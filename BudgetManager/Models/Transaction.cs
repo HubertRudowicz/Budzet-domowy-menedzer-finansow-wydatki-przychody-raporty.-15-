@@ -11,14 +11,14 @@ namespace projekttest.Models
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public decimal Amount { get; set; }
-        public string Category { get; set; }
-        public string Person {  get; set; }
+        public Category Category { get; set; }
+        public Person Person {  get; set; }
         public bool isRecurring { get; set; }
         public virtual string Title { get; set; }
 
         protected Transaction() { }
 
-        protected Transaction(DateTime date, string title, decimal amount, string category, string person, bool isRecurring)
+        protected Transaction(DateTime date, string title, decimal amount, Category category, Person person, bool isRecurring)
         {
             Date = date;
             Title = title;

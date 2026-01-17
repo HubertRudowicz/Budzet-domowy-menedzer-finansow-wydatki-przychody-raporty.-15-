@@ -20,11 +20,11 @@ namespace projekttest.Forms
         public SavingGoal SelectedGoal => (SavingGoal)cmbGoals.SelectedItem;
 
 
-        public FormInputAmount(SavingGoal defaultGoal = null)
+        public FormInputAmount(List<SavingGoal> availableGoals, SavingGoal defaultGoal = null)
         {
             InitializeComponent();
             InitializeComponentManual();
-            LoadGoals(defaultGoal);
+            LoadGoals(availableGoals, defaultGoal);
             nudAmount.KeyPress += (s, e) =>
             {
                 if (e.KeyChar == '.') e.KeyChar = ',';
@@ -36,12 +36,12 @@ namespace projekttest.Forms
             };
         }
 
-        private void LoadGoals(SavingGoal defaultGoal)
+        private void LoadGoals(List<SavingGoal> goals, SavingGoal defaultGoal)
         {
             nudAmount.Minimum = 0;
             nudAmount.DecimalPlaces = 2;
             cmbGoals.DataSource = null;
-            cmbGoals.DataSource = GlobalData.Goals;
+            cmbGoals.DataSource = goals;
             cmbGoals.DisplayMember = "Name";
 
             if (defaultGoal != null)

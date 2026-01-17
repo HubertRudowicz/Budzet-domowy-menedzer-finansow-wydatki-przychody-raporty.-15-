@@ -23,6 +23,16 @@ namespace projekttest
             _financeManager.ProcessRecurringTransactions();
 
             ShowUserControl(new UserControlExpenses());
+            
+            this.FormClosing += Form1_FormClosing;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_financeManager != null)
+            {
+                _financeManager.SaveData();
+            }
         }
 
         

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 
 using projekttest.Managers;
+using projekttest.Models;
 
 namespace projekttest.UserControls
 {
@@ -65,13 +66,13 @@ namespace projekttest.UserControls
                 return;
             }
 
-            if (GlobalData.Categories.Contains(newCat))
+            if (GlobalData.Categories.Any(c => c.Name == newCat))
             {
                 MessageBox.Show("Taka kategoria już istnieje.", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            GlobalData.Categories.Add(newCat);
+            GlobalData.Categories.Add(new Category(newCat));
             RefreshList();
 
             txtNewCategory.Text = PlaceholderText;
@@ -116,7 +117,8 @@ namespace projekttest.UserControls
             {
                 if (MessageBox.Show($"Usunąć '{selectedCat}'?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
-                    GlobalData.Categories.Remove(selectedCat);
+                    var cat = GlobalData.Categories.FirstOrDefault(c => c.Name == selectedCat);
+                    if (cat != null) GlobalData.Categories.Remove(cat);
                     RefreshList();
                 }
             }

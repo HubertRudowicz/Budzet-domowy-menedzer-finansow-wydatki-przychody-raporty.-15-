@@ -14,6 +14,7 @@ namespace projekttest.UserControls
 {
     public partial class UserControlExpenses : UserControl
     {
+        private Managers.FinanceManager _financeManager;
 
         //private BindingList<Expense> _expenses = new BindingList<Expense>();
 
@@ -22,7 +23,7 @@ namespace projekttest.UserControls
         public UserControlExpenses()
         {
             InitializeComponent();
-
+            _financeManager = new Managers.FinanceManager();
 
             dgvExpenses.AutoGenerateColumns = false;
 
@@ -33,7 +34,10 @@ namespace projekttest.UserControls
         private void RefreshData()
         {
             dgvExpenses.DataSource = null;
-            var sortedList = GlobalData.AllExpenses.OrderByDescending(x => x.Date).ToList();
+            var sortedList = _financeManager.GetRecentTransactions(1000, TimePeriod.AllTime)
+                .OfType<Expense>()
+                .OrderByDescending(x => x.Date)
+                .ToList();
 
             dgvExpenses.DataSource = sortedList;
 
@@ -134,8 +138,7 @@ namespace projekttest.UserControls
 
                     if (newExpense != null)
                     {
-                        newExpense.Id = GlobalData.AllExpenses.Count + 1;
-                        GlobalData.AllExpenses.Add(newExpense);
+                        _financeManager.AddTransaction(newExpense);
                         RefreshData();
                     }
                 }
@@ -172,7 +175,7 @@ namespace projekttest.UserControls
                 {
                     Expense selectedExpense = (Expense)dgvExpenses.SelectedRows[0].DataBoundItem;
 
-                    GlobalData.AllExpenses.Remove(selectedExpense);
+                    _financeManager.DeleteTransaction(selectedExpense);
                     RefreshData();
                 }
             }
@@ -193,7 +196,7 @@ namespace projekttest.UserControls
                 return;
             }
 
-            var filteredList = GlobalData.AllExpenses
+            var filteredList = _financeManager.GetFilteredList(_financeManager.GetAllExpenses(), TimePeriod.AllTime)
                 .Where(x => x.Date.Date >= dateFrom && x.Date.Date <= dateTo)
                 .OrderByDescending(x => x.Date)
                 .ToList();
@@ -221,10 +224,11 @@ namespace projekttest.UserControls
                 return;
             }
 
-            var filtredList = GlobalData.AllExpenses.Where(x => 
+            var allExpenses = _financeManager.GetAllExpenses();
+            var filtredList = allExpenses.Where(x => 
                 (x.Description != null && x.Description.ToLower().Contains(searchText)) ||
-                (x.Category != null && x.Category.ToLower().Contains(searchText)) ||
-                (x.Person != null && x.Person.ToLower().Contains(searchText)) ||
+                (x.Category != null && x.Category.Name.ToLower().Contains(searchText)) ||
+                (x.Person != null && x.Person.Name.ToLower().Contains(searchText)) ||
                 x.Amount.ToString().Contains(searchText)
             ).OrderByDescending(x => x.Date).ToList();
 

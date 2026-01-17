@@ -105,8 +105,8 @@ namespace projekttest.UserControls
             var selectedItem = cmbTimeFilter.SelectedItem as ComboItem;
             var selectedPeriod = selectedItem != null ? selectedItem.value : TimePeriod.AllTime;
 
-            var filtredExpenses = manager.GetFilteredList(GlobalData.AllExpenses, selectedPeriod);
-            var filtredIncomes = manager.GetFilteredList(GlobalData.AllIncomes, selectedPeriod);
+            var filtredExpenses = manager.GetFilteredList(manager.GetAllExpenses(), selectedPeriod);
+            var filtredIncomes = manager.GetFilteredList(manager.GetAllIncomes(), selectedPeriod);
 
             decimal totalIncome = filtredIncomes.Sum(e => e.Amount);
             decimal totalExpense = filtredExpenses.Sum(i => i.Amount);
@@ -285,9 +285,9 @@ namespace projekttest.UserControls
 
             foreach (var item in expensesByCategory)
             {
-                int index = chartPie.Series["Categories"].Points.AddXY(item.Category, item.Amount);
+                int index = chartPie.Series["Categories"].Points.AddXY(item.Category.Name, item.Amount);
                 double percent = totalExpense > 0 ? (double)item.Amount / (double)totalExpense : 0;
-                chartPie.Series["Categories"].Points[index].LegendText = $"{item.Category} ({percent:P0})";
+                chartPie.Series["Categories"].Points[index].LegendText = $"{item.Category.Name} ({percent:P0})";
                 chartPie.Series["Categories"].Points[index].ToolTip = $"{item.Amount:C2}";
             }
         }

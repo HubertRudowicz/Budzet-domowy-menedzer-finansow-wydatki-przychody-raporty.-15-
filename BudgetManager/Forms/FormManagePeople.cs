@@ -1,4 +1,5 @@
-﻿using projekttest.Managers;
+﻿using projekttest.Models;
+using projekttest.Managers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -61,9 +62,9 @@ namespace projekttest.Forms
 
             if (!string.IsNullOrWhiteSpace(name) && name != PlaceholderText)
             {
-                if (!GlobalData.People.Contains(name))
+                if (!GlobalData.People.Any(p => p.Name == name))
                 {
-                    GlobalData.People.Add(name);
+                    GlobalData.People.Add(new Person(name));
 
                     txtName.Text = PlaceholderText;
                     txtName.ForeColor = Color.Gray;
@@ -112,7 +113,8 @@ namespace projekttest.Forms
             } else
             {
                 var result = MessageBox.Show($"Czy chcesz usunąć osobę: {selected}?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes) GlobalData.People.Remove(selected);
+                var person = GlobalData.People.FirstOrDefault(p => p.Name == selected);
+                if (result == DialogResult.Yes && person != null) GlobalData.People.Remove(person);
             }
             ReloadList();         
         }

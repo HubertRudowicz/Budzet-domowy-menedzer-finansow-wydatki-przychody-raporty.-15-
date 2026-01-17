@@ -1,0 +1,46 @@
+{
+  "Incomes": [],
+  "Expenses": [],
+  "Categories": [
+    {
+      "Name": "Jedzenie",
+      "IsSystem": true
+    },
+    {
+      "Name": "Transport",
+      "IsSystem": true
+    },
+    {
+      "Name": "Rozrywka",
+      "IsSystem": true
+    },
+    {
+      "Name": "Edukacja",
+      "IsSystem": true
+    },
+    {
+      "Name": "Inne",
+      "IsSystem": true
+    },
+    {
+      "Name": "ertrer",
+      "IsSystem": false
+    },
+    {
+      "Name": "\u0022sgsdfg",
+      "IsSystem": false
+    }
+  ],
+  "People": [
+    {
+      "Name": "Tata"
+    },
+    {
+      "Name": "Mama"
+    },
+    {
+      "Name": "Syn"
+    }
+  ],
+  "Goals": []
+}

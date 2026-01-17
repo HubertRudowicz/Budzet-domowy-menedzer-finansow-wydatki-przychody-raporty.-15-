@@ -16,7 +16,13 @@ namespace projekttest.Forms
         public Expense? CreateExpense { get; private set; }
         private Expense? _expenseToEdit;
 
-        public string Person => cmbPerson.SelectedItem?.ToString() ?? "Nieznany";
+        public Person Person => cmbPerson.SelectedItem as Person;
+
+
+
+        // ... we need to be careful with line numbers.
+        // Let's replace the property first.
+
 
         public FormAddExpense()
         {
@@ -95,9 +101,9 @@ namespace projekttest.Forms
                     Date = dtpDate.Value,
                     Description = txtDescription.Text,
                     Amount = nudAmount.Value,
-                    Category = cmbCategory.SelectedItem?.ToString() ?? Models.SystemCategories.Other,
+                    Category = cmbCategory.SelectedItem as Category ?? new Category("Inne", true),
                     isRecurring = chkRecurring.Checked,
-                    Person = this.Person
+                    Person = this.Person ?? new Person("Nieznany")
                 };
             } else
             {
@@ -105,10 +111,10 @@ namespace projekttest.Forms
                 _expenseToEdit.Date = dtpDate.Value;
                 _expenseToEdit.Description = txtDescription.Text;
                 _expenseToEdit.Amount = nudAmount.Value;
-                _expenseToEdit.Category = cmbCategory.SelectedItem?.ToString() ?? Models.SystemCategories.Other;
+                _expenseToEdit.Category = cmbCategory.SelectedItem as Category ?? new Category("Inne", true);
                 _expenseToEdit.isRecurring = chkRecurring.Checked;
 
-                _expenseToEdit.Person = this.Person;
+                _expenseToEdit.Person = this.Person ?? new Person("Nieznany");
 
                 CreateExpense = _expenseToEdit;
             }

@@ -11,26 +11,26 @@ namespace projekttest
 {
     public static class GlobalData
     {
-        public static List<string> People = new List<string>()
+        public static List<Person> People = new List<Person>()
         {
-            "Tata",
-            "Mama",
-            "Syn",
-            "Córka"
+            new Person("Tata"),
+            new Person("Mama"),
+            new Person("Syn"),
+            new Person("Córka")
         };
 
         public static List<Expense> AllExpenses = new List<Expense>();
         public static List<Income> AllIncomes = new List<Income>();
         public static List<SavingGoal> Goals = new List<SavingGoal>();
-        public static List<string> Categories = new List<string>()
+        public static List<Category> Categories = new List<Category>()
         {
-            "Jedzenie",
-            "Dom",
-            "Transport",
-            "Rozrywka",
-            "Zdrowie",
-            "Edukacja",
-            "Inne"
+            new Category("Jedzenie", true),
+            new Category("Dom", true),
+            new Category("Transport", true),
+            new Category("Rozrywka", true), 
+            new Category("Zdrowie", true),
+            new Category("Edukacja", true),
+            new Category("Inne", true)
         };
     }
 }

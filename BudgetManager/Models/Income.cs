@@ -12,7 +12,7 @@ namespace projekttest.Models
 
         public Income() : base() { }
 
-        public Income(DateTime date, string desc, decimal amount, string category, string person, bool isRecurring)
+        public Income(DateTime date, string desc, decimal amount, Category category, Person person, bool isRecurring)
             : base(date, desc, amount, category, person, isRecurring)
         { }
 

@@ -1,0 +1,181 @@
+{
+  "People": [
+    {
+      "Name": "Jan"
+    },
+    {
+      "Name": "Anna"
+    },
+    {
+      "Name": "Piotrek"
+    }
+  ],
+  "Categories": [
+    {
+      "Name": "Praca",
+      "IsSystem": true
+    },
+    {
+      "Name": "Dom",
+      "IsSystem": true
+    },
+    {
+      "Name": "Jedzenie",
+      "IsSystem": true
+    },
+    {
+      "Name": "Transport",
+      "IsSystem": true
+    },
+    {
+      "Name": "Rozrywka",
+      "IsSystem": true
+    },
+    {
+      "Name": "Zdrowie",
+      "IsSystem": true
+    },
+    {
+      "Name": "Inne",
+      "IsSystem": true
+    }
+  ],
+  "Incomes": [
+    {
+      "Id": 1,
+      "Date": "2024-01-10T00:00:00",
+      "Amount": 6500.0,
+      "Category": {
+        "Name": "Praca",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Jan"
+      },
+      "isRecurring": true,
+      "Title": "Wypłata Styczeń",
+      "Source": "Wypłata IT Corp"
+    },
+    {
+      "Id": 2,
+      "Date": "2024-01-12T00:00:00",
+      "Amount": 4800.0,
+      "Category": {
+        "Name": "Praca",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Anna"
+      },
+      "isRecurring": true,
+      "Title": "Wypłata Szpital",
+      "Source": "Wypłata Szpital"
+    },
+    {
+      "Id": 3,
+      "Date": "2024-01-20T00:00:00",
+      "Amount": 500.0,
+      "Category": {
+        "Name": "Inne",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Piotrek"
+      },
+      "isRecurring": false,
+      "Title": "Prezent od babci",
+      "Source": "Prezent od babci"
+    }
+  ],
+  "Expenses": [
+    {
+      "Id": 1,
+      "Date": "2024-01-02T00:00:00",
+      "Amount": 2500.0,
+      "Category": {
+        "Name": "Dom",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Jan"
+      },
+      "isRecurring": true,
+      "Title": "Czynsz",
+      "Description": "Czynsz za mieszkanie"
+    },
+    {
+      "Id": 2,
+      "Date": "2024-01-05T00:00:00",
+      "Amount": 350.0,
+      "Category": {
+        "Name": "Jedzenie",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Anna"
+      },
+      "isRecurring": false,
+      "Title": "Zakupy Biedronka",
+      "Description": "Zakupy Biedronka"
+    },
+    {
+      "Id": 3,
+      "Date": "2024-01-08T00:00:00",
+      "Amount": 200.0,
+      "Category": {
+        "Name": "Transport",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Jan"
+      },
+      "isRecurring": false,
+      "Title": "Paliwo Orlen",
+      "Description": "Paliwo Orlen"
+    },
+    {
+      "Id": 4,
+      "Date": "2024-01-15T00:00:00",
+      "Amount": 120.0,
+      "Category": {
+        "Name": "Rozrywka",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Piotrek"
+      },
+      "isRecurring": false,
+      "Title": "Kino + Popcorn",
+      "Description": "Kino + Popcorn"
+    },
+    {
+      "Id": 5,
+      "Date": "2024-01-25T00:00:00",
+      "Amount": 150.0,
+      "Category": {
+        "Name": "Zdrowie",
+        "IsSystem": true
+      },
+      "Person": {
+        "Name": "Anna"
+      },
+      "isRecurring": false,
+      "Title": "Apteka",
+      "Description": "Leki i witaminy"
+    }
+  ],
+  "Goals": [
+    {
+      "Id": 1,
+      "Name": "Wakacje w Grecji",
+      "TargetAmount": 12000.0,
+      "CurrentAmount": 3400.0
+    },
+    {
+      "Id": 2,
+      "Name": "Nowy Laptop",
+      "TargetAmount": 6000.0,
+      "CurrentAmount": 1500.0
+    }
+  ]
+}

@@ -17,7 +17,18 @@ namespace projekttest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+
+            // Pokaż okno logowania
+            using (var loginForm = new Forms.LoginForm())
+            {
+                Application.Run(loginForm);
+                
+                // Jeśli zalogowano pomyślnie, uruchom główną aplikację
+                if (loginForm.IsLoggedIn)
+                {
+                    Application.Run(new Form1());
+                }
+            }
         }
     }
 }

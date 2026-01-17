@@ -15,20 +15,14 @@ namespace projekttest.UserControls
 {
     public partial class UserControlGoals : UserControl
     {
+        private Managers.FinanceManager _financeManager;
         private BindingSource _bindingSource = new BindingSource();
         public UserControlGoals()
         {
-
             InitializeComponent();
+            _financeManager = new Managers.FinanceManager();
 
             SetupButtons();
-
-            //if (GlobalData.Goals.Count == 0)
-            //{
-            //    GlobalData.Goals.Add(new SavingGoal { Name = "Wakacje 2026", TargetAmount = 8000, CurrentAmount = 2500 });
-            //    GlobalData.Goals.Add(new SavingGoal { Name = "Nowy Laptop", TargetAmount = 4000, CurrentAmount = 3800 });
-            //    GlobalData.Goals.Add(new SavingGoal { Name = "Samochód", TargetAmount = 25000, CurrentAmount = 1000 });
-            //}
 
             SetupGrid();
             RefreshData();
@@ -110,13 +104,14 @@ namespace projekttest.UserControls
 
         private void RefreshData()
         {
-            if (_bindingSource.DataSource != GlobalData.Goals) _bindingSource.DataSource = GlobalData.Goals;
+            var goals = _financeManager.GetAllGoals();
+            if (_bindingSource.DataSource != goals) _bindingSource.DataSource = goals;
             _bindingSource.ResetBindings(false);
         }
 
         private void btnContribute_Click(object sender, EventArgs e)
         {
-            if (GlobalData.Goals.Count == 0)
+            if (_financeManager.GetAllGoals().Count == 0)
             {
                 MessageBox.Show("Najpierw dodaj jakiś cel oszczędnościowy");
                 return;
@@ -128,7 +123,7 @@ namespace projekttest.UserControls
                 preSelected = dgvGoals.SelectedRows[0].DataBoundItem as SavingGoal;
             }
 
-            using (var form = new FormInputAmount(preSelected))
+            using (var form = new FormInputAmount(_financeManager.GetAllGoals(), preSelected))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -144,13 +139,14 @@ namespace projekttest.UserControls
                         Id = GlobalData.AllExpenses.Count + 1,
                         Date = form.Date,
                         Amount = amount,
-                        Category = "Oszczędności",
-                        Person = GlobalData.People.FirstOrDefault() ?? "Ja",
+                        Category = new Category("Oszczędności", true), // Simplified handling, ideally fetch from manager
+                        Person = new Person("Ja"), // Simplified
                         Description = $"Wpłata na cel: {targetGoal.Name}",
                         isRecurring = false
                     };
 
-                    GlobalData.AllExpenses.Add(newExpense);
+                    _financeManager.AddTransaction(newExpense);
+                    _financeManager.SaveData(); // Update goal implicit save via repo ref or explicit save
 
                     RefreshData();
                     MessageBox.Show($"Wpłacono {amount:C2} na cel `{targetGoal.Name}`.\nDodano automatycznie wydatek.", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -167,20 +163,23 @@ namespace projekttest.UserControls
             string targetStr = Microsoft.VisualBasic.Interaction.InputBox("Podaj kwote docelową:", "Kwota Celu", "10000");
             if (decimal.TryParse(targetStr, out decimal target))
             {
-                _bindingSource.Add(new SavingGoal { 
-                    Id = GlobalData.Goals.Count + 1,
+                var newGoal = new SavingGoal
+                {
                     Name = name,
                     TargetAmount = target,
                     CurrentAmount = 0
-                });
+                };
+                _financeManager.AddGoal(newGoal);
+                RefreshData();
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (_bindingSource.Current != null)
+            if (_bindingSource.Current is SavingGoal goal)
             {
-                _bindingSource.RemoveCurrent();
+                _financeManager.DeleteGoal(goal);
+                RefreshData();
             }
         }
 

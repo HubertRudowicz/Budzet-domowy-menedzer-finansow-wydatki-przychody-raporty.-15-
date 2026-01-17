@@ -11,7 +11,7 @@ namespace projekttest.Models
         }
         public Expense() : base() { }
 
-        public Expense(DateTime date, string desc, decimal amount, string category, string person, bool isRecurring = false) : base(date, desc, amount, category,person, isRecurring)
+        public Expense(DateTime date, string desc, decimal amount, Category category, Person person, bool isRecurring = false) : base(date, desc, amount, category,person, isRecurring)
         { }
 
         public string GetCSVFormat()
