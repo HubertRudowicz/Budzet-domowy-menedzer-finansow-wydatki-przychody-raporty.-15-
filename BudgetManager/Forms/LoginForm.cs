@@ -1,50 +1,94 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
+using projekttest.Models;
 
 namespace projekttest.Forms
 {
     public partial class LoginForm : Form
     {
+        private readonly IAuthService _authService;
         public bool IsLoggedIn { get; private set; } = false;
+
+        // Custom controls added programmatically
+        private Button btnGoToRegister;
+        private Label lblError;
 
         public LoginForm()
         {
-            InitializeComponent();
+            InitializeComponent(); // Calls Designer method
+            
+            // Initialize DbContext and AuthService
+            _authService = new AuthService(new BudgetDbContext());
+            
+            // Ensure DB exists
+            using (var db = new BudgetDbContext())
+            {
+                db.Database.EnsureCreated();
+            }
+
+            SetupCustomControls();
+        }
+
+        private void SetupCustomControls()
+        {
+            // Add Register button
+            btnGoToRegister = new Button 
+            { 
+                Text = "Zarejestruj się", 
+                Location = new Point(120, 200), // Below Login/Cancel
+                Width = 180, 
+                Height = 30 
+            };
+            btnGoToRegister.Click += BtnGoToRegister_Click;
+            this.Controls.Add(btnGoToRegister);
+
+            // Add Error Label
+            lblError = new Label 
+            { 
+                Text = "", 
+                Location = new Point(50, 240), 
+                AutoSize = true, 
+                ForeColor = Color.Red 
+            };
+            this.Controls.Add(lblError);
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            AttemptLogin();
-        }
-
-        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                AttemptLogin();
-            }
-        }
-
-        private void AttemptLogin()
-        {
-            string username = txtLogin.Text;
-            string password = txtPassword.Text;
-
-            // Proste logowanie "na sztywno" - admin/admin
-            if (username == "admin" && password == "admin")
+            var user = _authService.Login(txtLogin.Text, txtPassword.Text);
+            if (user != null)
             {
                 IsLoggedIn = true;
+                GlobalData.CurrentUser = user; 
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Nieprawidłowy login lub hasło.\n(Spróbuj: admin / admin)", "Błąd Logowania", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblError.Text = "Nieprawidłowy login lub hasło.";
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
+        }
+
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Designer linked this event, might as well use it to submit on Enter
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLogin.PerformClick();
+            }
+        }
+
+        private void BtnGoToRegister_Click(object? sender, EventArgs e)
+        {
+            var registerForm = new RegisterForm();
+            this.Hide();
+            registerForm.ShowDialog();
+            this.Show();
         }
     }
 }

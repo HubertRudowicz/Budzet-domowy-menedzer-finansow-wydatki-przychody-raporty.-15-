@@ -13,8 +13,7 @@ namespace projekttest.Managers
         private readonly IBudgetRepository _repository;
 
         // Konstruktor domyślny
-        // Zmiana na JsonBudgetRepository, aby od razu działał zapis do pliku
-        public FinanceManager() : this(new JsonBudgetRepository()) { }
+        public FinanceManager() : this(new SqliteBudgetRepository()) { }
 
         // Konstruktor z wstrzykiwaniem zależności (dla testów)
         public FinanceManager(IBudgetRepository repository)
@@ -32,25 +31,25 @@ namespace projekttest.Managers
             // 1. Przychody
             if (_repository.AllIncomes.Count == 0)
             {
-                _repository.AllIncomes.Add(new Income { Id = 1, Date = DateTime.Now.AddDays(-10), Amount = 5000, Person = new Person("Tata"), Source = "Wypłata", Category = new Category("Wynagrodzenia", true), isRecurring = true });
-                _repository.AllIncomes.Add(new Income { Id = 2, Date = DateTime.Now.AddDays(-5), Amount = 3500, Person = new Person("Mama"), Source = "Wypłata", Category = new Category("Wynagrodzenia", true), isRecurring = true });
-                _repository.AllIncomes.Add(new Income { Id = 3, Date = DateTime.Now.AddDays(-2), Amount = 500, Person = new Person("Syn"), Source = "Urodziny", Category = new Category("Inne", true), isRecurring = false });
+                _repository.AllIncomes.Add(new Income { Id = 0, Date = DateTime.Now.AddDays(-10), Amount = 5000, Person = new Person("Tata"), Source = "Wypłata", Category = new Category("Wynagrodzenia", true), isRecurring = true });
+                _repository.AllIncomes.Add(new Income { Id = 0, Date = DateTime.Now.AddDays(-5), Amount = 3500, Person = new Person("Mama"), Source = "Wypłata", Category = new Category("Wynagrodzenia", true), isRecurring = true });
+                _repository.AllIncomes.Add(new Income { Id = 0, Date = DateTime.Now.AddDays(-2), Amount = 500, Person = new Person("Syn"), Source = "Urodziny", Category = new Category("Inne", true), isRecurring = false });
             }
 
             // 2. Wydatki
             if (_repository.AllExpenses.Count == 0)
             {
-                _repository.AllExpenses.Add(new Expense { Id = 1, Date = DateTime.Now, Amount = 150, Category = new Category("Jedzenie", true), Description = "Biedronka", Person = new Person("Mama") });
-                _repository.AllExpenses.Add(new Expense { Id = 2, Date = DateTime.Now.AddDays(-1), Amount = 200, Category = new Category("Transport", true), Description = "Orlen", Person = new Person("Tata") }); // Paliwo -> Transport
-                _repository.AllExpenses.Add(new Expense { Id = 3, Date = DateTime.Now.AddDays(-2), Amount = 50, Category = new Category("Rozrywka", true), Description = "Kino", Person = new Person("Syn") });
+                _repository.AllExpenses.Add(new Expense { Id = 0, Date = DateTime.Now, Amount = 150, Category = new Category("Jedzenie", true), Description = "Biedronka", Person = new Person("Mama") });
+                _repository.AllExpenses.Add(new Expense { Id = 0, Date = DateTime.Now.AddDays(-1), Amount = 200, Category = new Category("Transport", true), Description = "Orlen", Person = new Person("Tata") }); // Paliwo -> Transport
+                _repository.AllExpenses.Add(new Expense { Id = 0, Date = DateTime.Now.AddDays(-2), Amount = 50, Category = new Category("Rozrywka", true), Description = "Kino", Person = new Person("Syn") });
             }
 
             // 3. Cele
             if (_repository.Goals.Count == 0)
             {
-                _repository.Goals.Add(new SavingGoal { Id = 1, Name = "Wakacje 2026", TargetAmount = 8000, CurrentAmount = 2610 });
-                _repository.Goals.Add(new SavingGoal { Id = 2, Name = "Samochód", TargetAmount = 25000, CurrentAmount = 18000 });
-                _repository.Goals.Add(new SavingGoal { Id = 3, Name = "Nowy Telefon", TargetAmount = 4000, CurrentAmount = 500 });
+                _repository.Goals.Add(new SavingGoal { Id = 0, Name = "Wakacje 2026", TargetAmount = 8000, CurrentAmount = 2610 });
+                _repository.Goals.Add(new SavingGoal { Id = 0, Name = "Samochód", TargetAmount = 25000, CurrentAmount = 18000 });
+                _repository.Goals.Add(new SavingGoal { Id = 0, Name = "Nowy Telefon", TargetAmount = 4000, CurrentAmount = 500 });
             }
 
             _repository.Save();
@@ -66,7 +65,7 @@ namespace projekttest.Managers
                 e => e.Date,
                 (oldExp, newDate) => new Expense
                 {
-                    Id = GenerateExpenseId(),
+                    Id = 0, // Let DB generate ID
                     Date = newDate,
                     Amount = oldExp.Amount,
                     Category = oldExp.Category,
@@ -87,7 +86,7 @@ namespace projekttest.Managers
                 i => i.Date,
                 (oldInc, newDate) => new Income
                 {
-                    Id = GenerateIncomeId(),
+                    Id = 0, // Let DB generate ID
                     Date = newDate,
                     Amount = oldInc.Amount,
                     Person = oldInc.Person,
@@ -299,12 +298,12 @@ namespace projekttest.Managers
         {
             if (transaction is Expense expense)
             {
-                expense.Id = GenerateExpenseId();
+                // expense.Id = GenerateExpenseId(); // Let DB handle ID
                 _repository.AllExpenses.Add(expense);
             }
             else if (transaction is Income income)
             {
-                income.Id = GenerateIncomeId();
+                // income.Id = GenerateIncomeId(); // Let DB handle ID
                 _repository.AllIncomes.Add(income);
             }
             _repository.Save();
@@ -321,7 +320,7 @@ namespace projekttest.Managers
 
         public void AddGoal(SavingGoal goal)
         {
-            goal.Id = _repository.Goals.Any() ? _repository.Goals.Max(g => g.Id) + 1 : 1;
+            // goal.Id = _repository.Goals.Any() ? _repository.Goals.Max(g => g.Id) + 1 : 1;
             _repository.Goals.Add(goal);
             _repository.Save();
         }

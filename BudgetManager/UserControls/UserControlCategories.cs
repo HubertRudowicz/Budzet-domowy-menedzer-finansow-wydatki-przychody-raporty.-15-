@@ -5,12 +5,15 @@ using System.Runtime.CompilerServices;
 
 using projekttest.Managers;
 using projekttest.Models;
+using System.Linq;
 
 namespace projekttest.UserControls
 {
     public partial class UserControlCategories : UserControl
     {
         private const string PlaceholderText = "Wpisz nazwę kategorii...";
+        private readonly FinanceManager _financeManager = new FinanceManager();
+
         public UserControlCategories()
         {
             InitializeComponent();
@@ -73,6 +76,8 @@ namespace projekttest.UserControls
             }
 
             GlobalData.Categories.Add(new Category(newCat));
+            _financeManager.SaveData(); // Ensure persistence
+            
             RefreshList();
 
             txtNewCategory.Text = PlaceholderText;
@@ -96,8 +101,8 @@ namespace projekttest.UserControls
                 return;
             }
 
-            FinanceManager manager = new FinanceManager();
-            int count = manager.GetCategoryUsageCount(selectedCat);
+            // _financeManager is now class level
+            int count = _financeManager.GetCategoryUsageCount(selectedCat);
 
             if (count > 0)
             {
@@ -110,7 +115,7 @@ namespace projekttest.UserControls
 
                 if (result == DialogResult.Yes)
                 {
-                    manager.DeleteCategoryAndMigrate(selectedCat, Models.SystemCategories.Other);
+                    _financeManager.DeleteCategoryAndMigrate(selectedCat, Models.SystemCategories.Other);
                     RefreshList();
                 }
             } else
@@ -118,7 +123,11 @@ namespace projekttest.UserControls
                 if (MessageBox.Show($"Usunąć '{selectedCat}'?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
                     var cat = GlobalData.Categories.FirstOrDefault(c => c.Name == selectedCat);
-                    if (cat != null) GlobalData.Categories.Remove(cat);
+                    if (cat != null) 
+                    {
+                        GlobalData.Categories.Remove(cat);
+                        _financeManager.SaveData(); // Ensure persistence
+                    }
                     RefreshList();
                 }
             }

@@ -11,6 +11,8 @@ namespace projekttest
 {
     public static class GlobalData
     {
+        public static User? CurrentUser { get; set; }
+
         public static List<Person> People = new List<Person>()
         {
             new Person("Tata"),

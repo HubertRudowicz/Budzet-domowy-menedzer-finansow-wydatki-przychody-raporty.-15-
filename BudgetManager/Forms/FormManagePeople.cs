@@ -15,6 +15,7 @@ namespace projekttest.Forms
     public partial class FormManagePeople : Form
     {
         private const string PlaceholderText = "Wpisz imię...";
+        private readonly FinanceManager _financeManager = new FinanceManager();
 
         public FormManagePeople()
         {
@@ -65,6 +66,7 @@ namespace projekttest.Forms
                 if (!GlobalData.People.Any(p => p.Name == name))
                 {
                     GlobalData.People.Add(new Person(name));
+                    _financeManager.SaveData(); // Ensure persistence
 
                     txtName.Text = PlaceholderText;
                     txtName.ForeColor = Color.Gray;
@@ -91,9 +93,9 @@ namespace projekttest.Forms
 
             if (string.IsNullOrEmpty(selected)) return;
 
-            FinanceManager manager = new FinanceManager();
+            // _financeManager is now class level
 
-            int usageCount = manager.GetPersonTransactionCount(selected);
+            int usageCount = _financeManager.GetPersonTransactionCount(selected);
 
             if (usageCount > 0)
             {
@@ -107,14 +109,18 @@ namespace projekttest.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    manager.DeletePersonWithHistory(selected); ;
+                    _financeManager.DeletePersonWithHistory(selected); ;
                     MessageBox.Show("Osoba usunięta", "Sukces");
                 }
             } else
             {
                 var result = MessageBox.Show($"Czy chcesz usunąć osobę: {selected}?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 var person = GlobalData.People.FirstOrDefault(p => p.Name == selected);
-                if (result == DialogResult.Yes && person != null) GlobalData.People.Remove(person);
+                if (result == DialogResult.Yes && person != null) 
+                {
+                    GlobalData.People.Remove(person);
+                    _financeManager.SaveData(); // Ensure persistence
+                }
             }
             ReloadList();         
         }

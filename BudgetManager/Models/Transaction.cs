@@ -14,6 +14,7 @@ namespace projekttest.Models
         public Category Category { get; set; }
         public Person Person {  get; set; }
         public bool isRecurring { get; set; }
+        public int UserId { get; set; }
         public virtual string Title { get; set; }
 
         protected Transaction() { }
