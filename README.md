@@ -30,3 +30,17 @@ Aplikacja umożliwia pełną kontrolę nad finansami:
 2. Otwórz plik `BudgrzeManager.sln` w Visual Studio 2022
 3. Zbuduj projekt i uruchom (F5)
 
+## Jak uruchomić testy
+
+W projekcie znajdują się testy jednostkowe oparte na frameworku xUnit. Aby je uruchomić:
+
+1. Otwórz terminal w folderze głównym solucji (tam gdzie plik `.sln`).
+2. Wpisz polecenie:
+   ```bash
+   dotnet test
+   ```
+3. Alternatywnie w Visual Studio: wybierz z menu **Test** -> **Run All Tests**.
+
+## Diagram UML i Dokumentacja
+
+Szczegółowy diagram UML oraz opis modelu obiektowego znajduje się w pliku `UML.md` (lub w dokumentacji projektowej).
