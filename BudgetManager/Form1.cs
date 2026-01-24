@@ -19,7 +19,7 @@ namespace projekttest
             panelContent.Dock = DockStyle.Fill;
             panelContent.BringToFront();
 
-            _financeManager.LoadTestData();
+            //_financeManager.LoadTestData();
             _financeManager.ProcessRecurringTransactions();
 
             ShowUserControl(new UserControlExpenses());
