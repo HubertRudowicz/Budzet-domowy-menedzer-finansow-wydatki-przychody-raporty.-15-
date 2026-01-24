@@ -1,0 +1,190 @@
+# Diagram UML i Model Obiektowy
+
+## Diagram Klas (UML)
+
+```mermaid
+classDiagram
+    class GlobalData {
+        +static List~Income~ AllIncomes
+        +static List~Expense~ AllExpenses
+        +static List~SavingGoal~ Goals
+        +static List~Category~ Categories
+        +static List~Person~ People
+        +static User CurrentUser
+    }
+
+    class FinanceManager {
+        -IBudgetRepository _repository
+        +FinanceManager()
+        +FinanceManager(IBudgetRepository repository)
+        +void SaveData()
+        +void LoadTestData()
+        +int ProcessRecurringTransactions()
+        +bool TryDeletePerson(string personName, out string errorMessage)
+        +bool TryDeleteCategory(string categoryName, out string errorMessage)
+        +List~Transaction~ GetRecentTransactions(int count, TimePeriod period)
+        +decimal GetCurrentBalance(TimePeriod period)
+        +List~T~ GetFilteredList~T~(List~T~ list, TimePeriod period)
+        +void AddTransaction(Transaction transaction)
+        +void DeleteTransaction(Transaction transaction)
+        +void AddGoal(SavingGoal goal)
+        +void DeleteGoal(SavingGoal goal)
+        +int GetPersonTransactionCount(string personName)
+        +int GetCategoryUsageCount(string categoryName)
+        +void DeletePersonWithHistory(string personName)
+        +void DeleteCategoryAndMigrate(string oldCategory, string newCategory)
+        -int ProcessList~T~(...)
+        -DateTime CalculateTargetDate(DateTime today, DateTime originalDate)
+        -DateTime GetStartDate(TimePeriod period)
+    }
+
+    class IBudgetRepository {
+        <<interface>>
+        +List~Income~ AllIncomes
+        +List~Expense~ AllExpenses
+        +List~SavingGoal~ Goals
+        +List~Category~ Categories
+        +List~Person~ People
+        +void Save()
+    }
+
+    class SqliteBudgetRepository {
+        -int _currentUserId
+        +SqliteBudgetRepository()
+        +void Save()
+        -void LoadFromDb()
+        -void LoadDefaultCategories()
+        -void LoadDefaultPeople()
+    }
+    
+    class JsonBudgetRepository {
+        +JsonBudgetRepository()
+        +void Save()
+    }
+
+    class Transaction {
+        <<abstract>>
+        +int Id
+        +DateTime Date
+        +decimal Amount
+        +Category Category
+        +Person Person
+        +bool isRecurring
+        +int UserId
+        +virtual string Title
+        +static decimal operator +(Transaction a, Transaction b)
+    }
+
+    class Income {
+        +string Source
+        +Income()
+        +Income(...)
+        +string GetCSVFormat()
+    }
+
+    class Expense {
+        +string Description
+        +Expense()
+        +Expense(...)
+        +string GetCSVFormat()
+    }
+
+    class IExportable {
+        <<interface>>
+        +string GetCSVFormat()
+    }
+
+    class Category {
+        +int Id
+        +int UserId
+        +string Name
+        +bool IsSystem
+        +Category(string name, bool isSystem)
+    }
+
+    class Person {
+        +int Id
+        +int UserId
+        +string Name
+        +Person(string name)
+    }
+
+    class SavingGoal {
+        +int Id
+        +int UserId
+        +string Name
+        +decimal TargetAmount
+        +decimal CurrentAmount
+        +int ProgressPercentage
+        +string StatusText
+    }
+
+    class User {
+        +int Id
+        +string Username
+        +string PasswordHash
+    }
+
+    class IAuthService {
+        <<interface>>
+        +bool Register(string username, string password, out string errorMessage)
+        +User? Login(string username, string password)
+        +void Logout()
+        +User? CurrentUser
+    }
+
+    class AuthService {
+        -BudgetDbContext _context
+        +User? CurrentUser
+        +AuthService(BudgetDbContext context)
+        +bool Register(string username, string password, out string errorMessage)
+        +User? Login(string username, string password)
+        +void Logout()
+        -string HashPassword(string password)
+    }
+
+    Transaction <|-- Income
+    Transaction <|-- Expense
+    IExportable <|.. Income
+    IExportable <|.. Expense
+    IBudgetRepository <|.. SqliteBudgetRepository
+    IBudgetRepository <|.. JsonBudgetRepository
+    FinanceManager --> IBudgetRepository : uses
+    Transaction --> Category : has
+    Transaction --> Person : has
+    IAuthService <|.. AuthService
+    AuthService --> User : uses
+    FinanceManager ..> User : references via GlobalData
+```
+
+## Model Obiektowy - Analiza (Rozszerzona)
+
+Projekt jest zbudowany zgodnie z zasadami programowania obiektowego (OOP), co zapewnia jego czytelność, łatwość w utrzymaniu i rozbudowie.
+
+### 1. Dziedziczenie (Inheritance)
+Klasa [Transaction](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Transaction.cs#20-21) stanowi fundament dla wszystkich operacji finansowych.
+- [Income](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Income.cs#13-14) (przychód) i [Expense](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Expense.cs#14-16) (wydatek) dziedziczą po klasie [Transaction](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Transaction.cs#20-21).
+- Pozwala to na współdzielenie kodu (np. właściwości [Date](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#272-287), [Amount](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager.Tests/TransactionTests.cs#18-31)) oraz polimorficzne traktowanie różnych typów transakcji w listach (np. w metodzie [GetRecentTransactions](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#253-262)).
+
+### 2. Abstrakcja (Abstraction)
+- **Klasa abstrakcyjna [Transaction](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Transaction.cs#20-21)**: Nie można utworzyć samego obiektu "Transakcja" – musi to być konkretnie Przychód lub Wydatek. Wymusza to precyzję w modelu danych.
+- **Interfejsy ([IBudgetRepository](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/IBudgetRepository.cs#6-17), [IExportable](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/IExportable.cs#9-13), `IAuthService`)**: Definiują kontrakt, czyli "co" klasa ma robić, ale nie "jak".
+    - [IBudgetRepository](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/IBudgetRepository.cs#6-17): Pozwala na łatwą zmianę sposobu zapisu danych (np. plik JSON vs baza SQLite) bez konieczności zmian w logice [FinanceManager](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#15-17).
+    - `IAuthService`: Oddziela logikę uwierzytelniania od reszty aplikacji.
+
+### 3. Hermetyzacja (Encapsulation)
+- Wszystkie pola danych w klasach (np. [Amount](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager.Tests/TransactionTests.cs#18-31) w [Transaction](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Transaction.cs#20-21), `PasswordHash` w [User](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/User.cs#6-20)) są ukryte za właściwościami publicznymi (Properties).
+- Wewnętrzne metody pomocnicze w [FinanceManager](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#15-17) (np. [ProcessList](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#122-152), [GenerateExpenseId](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#158-159)) są prywatne (`private`), co ukrywa skomplikowaną logikę przed światem zewnętrznym.
+- Dostęp do bazy danych jest schowany w Repozytoriach ([SqliteBudgetRepository](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/SqliteBudgetRepository.cs#8-287)), dzięki czemu warstwa prezentacji (Formularze) nie musi wiedzieć nic o SQL.
+
+### 4. Polimorfizm (Polymorphism)
+- Metoda [GetCSVFormat](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Expense.cs#17-21) z interfejsu [IExportable](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/IExportable.cs#9-13) działa inaczej dla [Income](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Income.cs#13-14) (zapisuje źródło) i dla [Expense](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Expense.cs#14-16) (zapisuje opis), ale wywoływana jest w ten sam sposób.
+- Użycie `List<Transaction>` w [FinanceManager](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#15-17) pozwala przechowywać na jednej liście oba typy obiektów.
+
+### 5. Elementy Statyczne i Helpery
+- Klasa [AppConstants](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/AppConstants.cs#9-13) przechowuje stałe systemowe (np. nazwy kategorii).
+- Metoda statyczna operatora `+` w [Transaction](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Transaction.cs#20-21) pozwala na eleganckie sumowanie transakcji w kodzie: `suma = transakcja1 + transakcja2`.
+
+### 6. Relacje
+- **Kompozycja**: Obiekt [Transaction](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Transaction.cs#20-21) zawiera obiekty [Category](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Category.cs#13-18) i [Person](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/Person.cs#5-39). Są one niezbędne do istnienia pełnej transakcji.
+- **Asocjacja**: [FinanceManager](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Managers/FinanceManager.cs#15-17) korzysta z [IBudgetRepository](file:///c:/Users/Piotr/Desktop/budze/Budzet-domowy-menedzer-finansow-wydatki-przychody-raporty.-15-/BudgetManager/Models/IBudgetRepository.cs#6-17).

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagram UML - Budget Manager</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+    <h1>Diagram Klas - Budget Manager</h1>
+    <div class="mermaid">
+classDiagram
+    class GlobalData {
+        +static List~Income~ AllIncomes
+        +static List~Expense~ AllExpenses
+        +static List~SavingGoal~ Goals
+        +static List~Category~ Categories
+        +static List~Person~ People
+        +static User CurrentUser
+    }
+
+    class FinanceManager {
+        -IBudgetRepository _repository
+        +FinanceManager()
+        +FinanceManager(IBudgetRepository repository)
+        +void SaveData()
+        +void LoadTestData()
+        +int ProcessRecurringTransactions()
+        +bool TryDeletePerson(string personName, out string errorMessage)
+        +bool TryDeleteCategory(string categoryName, out string errorMessage)
+        +List~Transaction~ GetRecentTransactions(int count, TimePeriod period)
+        +decimal GetCurrentBalance(TimePeriod period)
+        +List~T~ GetFilteredList~T~(List~T~ list, TimePeriod period)
+        +void AddTransaction(Transaction transaction)
+        +void DeleteTransaction(Transaction transaction)
+        +void AddGoal(SavingGoal goal)
+        +void DeleteGoal(SavingGoal goal)
+        +int GetPersonTransactionCount(string personName)
+        +int GetCategoryUsageCount(string categoryName)
+        +void DeletePersonWithHistory(string personName)
+        +void DeleteCategoryAndMigrate(string oldCategory, string newCategory)
+        -int ProcessList~T~(...)
+        -DateTime CalculateTargetDate(DateTime today, DateTime originalDate)
+        -DateTime GetStartDate(TimePeriod period)
+    }
+
+    class IBudgetRepository {
+        <<interface>>
+        +List~Income~ AllIncomes
+        +List~Expense~ AllExpenses
+        +List~SavingGoal~ Goals
+        +List~Category~ Categories
+        +List~Person~ People
+        +void Save()
+    }
+
+    class SqliteBudgetRepository {
+        -int _currentUserId
+        +SqliteBudgetRepository()
+        +void Save()
+        -void LoadFromDb()
+        -void LoadDefaultCategories()
+        -void LoadDefaultPeople()
+    }
+    
+    class JsonBudgetRepository {
+        +JsonBudgetRepository()
+        +void Save()
+    }
+
+    class Transaction {
+        <<abstract>>
+        +int Id
+        +DateTime Date
+        +decimal Amount
+        +Category Category
+        +Person Person
+        +bool isRecurring
+        +int UserId
+        +virtual string Title
+        +static decimal operator +(Transaction a, Transaction b)
+    }
+
+    class Income {
+        +string Source
+        +Income()
+        +Income(...)
+        +string GetCSVFormat()
+    }
+
+    class Expense {
+        +string Description
+        +Expense()
+        +Expense(...)
+        +string GetCSVFormat()
+    }
+
+    class IExportable {
+        <<interface>>
+        +string GetCSVFormat()
+    }
+
+    class Category {
+        +int Id
+        +int UserId
+        +string Name
+        +bool IsSystem
+        +Category(string name, bool isSystem)
+    }
+
+    class Person {
+        +int Id
+        +int UserId
+        +string Name
+        +Person(string name)
+    }
+
+    class SavingGoal {
+        +int Id
+        +int UserId
+        +string Name
+        +decimal TargetAmount
+        +decimal CurrentAmount
+        +int ProgressPercentage
+        +string StatusText
+    }
+
+    class User {
+        +int Id
+        +string Username
+        +string PasswordHash
+    }
+
+    class IAuthService {
+        <<interface>>
+        +bool Register(string username, string password, out string errorMessage)
+        +User? Login(string username, string password)
+        +void Logout()
+        +User? CurrentUser
+    }
+
+    class AuthService {
+        -BudgetDbContext _context
+        +User? CurrentUser
+        +AuthService(BudgetDbContext context)
+        +bool Register(string username, string password, out string errorMessage)
+        +User? Login(string username, string password)
+        +void Logout()
+        -string HashPassword(string password)
+    }
+
+    Transaction <|-- Income
+    Transaction <|-- Expense
+    IExportable <|.. Income
+    IExportable <|.. Expense
+    IBudgetRepository <|.. SqliteBudgetRepository
+    IBudgetRepository <|.. JsonBudgetRepository
+    FinanceManager --> IBudgetRepository : uses
+    Transaction --> Category : has
+    Transaction --> Person : has
+    IAuthService <|.. AuthService
+    AuthService --> User : uses
+    FinanceManager ..> User : references via GlobalData
+    </div>
+</body>
+</html>
