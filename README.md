@@ -27,7 +27,7 @@ Aplikacja umożliwia pełną kontrolę nad finansami:
 ##Jak uruchomić
 
 1. Pobierz repozytorium
-2. Otwórz plik `BudgrzeManager.sln` w Visual Studio 2022
+2. Otwórz plik `BudzetManager.sln` w Visual Studio 2022
 3. Zbuduj projekt i uruchom (F5)
 
 ## Jak uruchomić testy
@@ -44,3 +44,4 @@ W projekcie znajdują się testy jednostkowe oparte na frameworku xUnit. Aby je 
 ## Diagram UML i Dokumentacja
 
 Szczegółowy diagram UML oraz opis modelu obiektowego znajduje się w pliku `UML.md` (lub w dokumentacji projektowej).
+
