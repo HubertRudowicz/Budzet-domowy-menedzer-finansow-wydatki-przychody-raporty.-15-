@@ -24,27 +24,27 @@ namespace projekttest.Forms
         private void InitializeComponent()
         {
             this.Text = "Rejestracja - Menadżer Finansów";
-            this.Size = new Size(400, 400);
+            this.Size = new Size(550, 550);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
 
-            var lblUsername = new Label { Text = "Login:", Location = new Point(50, 30), AutoSize = true };
-            txtUsername = new TextBox { Location = new Point(50, 55), Width = 280 };
+            var lblUsername = new Label { Text = "Login:", Location = new Point(100, 50), AutoSize = true };
+            txtUsername = new TextBox { Location = new Point(100, 75), Width = 350 };
 
-            var lblPassword = new Label { Text = "Hasło:", Location = new Point(50, 100), AutoSize = true };
-            txtPassword = new TextBox { Location = new Point(50, 125), Width = 280, PasswordChar = '*' };
+            var lblPassword = new Label { Text = "Hasło:", Location = new Point(100, 130), AutoSize = true };
+            txtPassword = new TextBox { Location = new Point(100, 155), Width = 350, PasswordChar = '*' };
 
-            var lblConfirmPassword = new Label { Text = "Powtórz hasło:", Location = new Point(50, 170), AutoSize = true };
-            txtConfirmPassword = new TextBox { Location = new Point(50, 195), Width = 280, PasswordChar = '*' };
+            var lblConfirmPassword = new Label { Text = "Powtórz hasło:", Location = new Point(100, 210), AutoSize = true };
+            txtConfirmPassword = new TextBox { Location = new Point(100, 235), Width = 350, PasswordChar = '*' };
 
-            btnRegister = new Button { Text = "Zarejestruj", Location = new Point(50, 250), Width = 280, Height = 40, BackColor = Color.LightGreen };
+            btnRegister = new Button { Text = "Zarejestruj", Location = new Point(100, 310), Width = 350, Height = 45, BackColor = Color.LightGreen };
             btnRegister.Click += BtnRegister_Click;
 
-            btnCancel = new Button { Text = "Anuluj", Location = new Point(50, 300), Width = 280, Height = 30 };
+            btnCancel = new Button { Text = "Anuluj", Location = new Point(100, 370), Width = 350, Height = 40 };
             btnCancel.Click += (s, e) => this.Close();
 
-            lblError = new Label { Text = "", Location = new Point(50, 225), AutoSize = true, ForeColor = Color.Red };
+            lblError = new Label { Text = "", Location = new Point(100, 275), AutoSize = true, ForeColor = Color.Red };
 
             this.Controls.Add(lblUsername);
             this.Controls.Add(txtUsername);

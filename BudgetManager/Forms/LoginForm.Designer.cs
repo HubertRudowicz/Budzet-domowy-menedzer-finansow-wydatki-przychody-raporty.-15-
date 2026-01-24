@@ -42,7 +42,7 @@ namespace projekttest.Forms
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTitle.Location = new System.Drawing.Point(80, 20);
+            this.lblTitle.Location = new System.Drawing.Point(140, 40);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(220, 30);
             this.lblTitle.TabIndex = 0;
@@ -51,7 +51,7 @@ namespace projekttest.Forms
             // lblLogin
             // 
             this.lblLogin.AutoSize = true;
-            this.lblLogin.Location = new System.Drawing.Point(50, 80);
+            this.lblLogin.Location = new System.Drawing.Point(80, 100);
             this.lblLogin.Name = "lblLogin";
             this.lblLogin.Size = new System.Drawing.Size(46, 15);
             this.lblLogin.TabIndex = 1;
@@ -59,15 +59,15 @@ namespace projekttest.Forms
             // 
             // txtLogin
             // 
-            this.txtLogin.Location = new System.Drawing.Point(120, 77);
+            this.txtLogin.Location = new System.Drawing.Point(150, 97);
             this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(180, 23);
+            this.txtLogin.Size = new System.Drawing.Size(250, 23);
             this.txtLogin.TabIndex = 2;
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(50, 120);
+            this.lblPassword.Location = new System.Drawing.Point(80, 150);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(43, 15);
             this.lblPassword.TabIndex = 3;
@@ -75,10 +75,10 @@ namespace projekttest.Forms
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(120, 117);
+            this.txtPassword.Location = new System.Drawing.Point(150, 147);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(180, 23);
+            this.txtPassword.Size = new System.Drawing.Size(250, 23);
             this.txtPassword.TabIndex = 4;
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             // 
@@ -87,9 +87,9 @@ namespace projekttest.Forms
             this.btnLogin.BackColor = System.Drawing.Color.MediumSeaGreen;
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(120, 160);
+            this.btnLogin.Location = new System.Drawing.Point(150, 220);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(80, 30);
+            this.btnLogin.Size = new System.Drawing.Size(110, 40);
             this.btnLogin.TabIndex = 5;
             this.btnLogin.Text = "Zaloguj";
             this.btnLogin.UseVisualStyleBackColor = false;
@@ -97,9 +97,9 @@ namespace projekttest.Forms
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(220, 160);
+            this.btnCancel.Location = new System.Drawing.Point(290, 220);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(80, 30);
+            this.btnCancel.Size = new System.Drawing.Size(110, 40);
             this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Anuluj";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -109,7 +109,7 @@ namespace projekttest.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 231);
+            this.ClientSize = new System.Drawing.Size(500, 350);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txtPassword);

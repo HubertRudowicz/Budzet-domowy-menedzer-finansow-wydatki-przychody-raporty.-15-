@@ -36,9 +36,11 @@ namespace projekttest.Forms
             btnGoToRegister = new Button 
             { 
                 Text = "Zarejestruj się", 
-                Location = new Point(120, 200), // Below Login/Cancel
-                Width = 180, 
-                Height = 30 
+                Location = new Point(190, 240), // Center X: (500-250)/2 = 125. Y=270 (10px below Login/Cancel)
+                Width = 250, 
+                Height = 35,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.LightGray
             };
             btnGoToRegister.Click += BtnGoToRegister_Click;
             this.Controls.Add(btnGoToRegister);
@@ -47,7 +49,7 @@ namespace projekttest.Forms
             lblError = new Label 
             { 
                 Text = "", 
-                Location = new Point(50, 240), 
+                Location = new Point(150, 190), // Between Password and Buttons (Pass Y=147, But Y=220)
                 AutoSize = true, 
                 ForeColor = Color.Red 
             };
