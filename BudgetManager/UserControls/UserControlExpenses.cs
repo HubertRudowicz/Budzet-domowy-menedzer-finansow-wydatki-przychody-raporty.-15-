@@ -155,6 +155,7 @@ namespace projekttest.UserControls
                 {
                     if (form.ShowDialog() == DialogResult.OK)
                     {
+                        _financeManager.SaveData();
                         RefreshData();
                     }
                 }

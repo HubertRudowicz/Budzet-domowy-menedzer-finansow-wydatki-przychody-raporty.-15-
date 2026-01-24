@@ -139,7 +139,7 @@ namespace projekttest.UserControls
                 {
                     var newIncome = new Income
                     {
-                        Id = GlobalData.AllIncomes.Count + 1,
+                        // Id = GlobalData.AllIncomes.Count + 1, // Let DB handle ID
                         Source = form.IncomeSource,
                         Amount = form.Amount,
                         Date = form.Date,
@@ -169,6 +169,7 @@ namespace projekttest.UserControls
                         selectedIncome.Person = form.Person;
                         selectedIncome.Category = form.Category;
 
+                        _financeManager.SaveData();
                         dgvExpenses.Refresh();
                         RefreshData();
                     }
