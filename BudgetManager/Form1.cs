@@ -78,6 +78,7 @@ namespace projekttest
             if (result == DialogResult.Yes)
             {
                 Managers.DataManager.ImportData();
+                _financeManager.SaveData();
 
                 ShowUserControl(new UserControlDashboard());
             }

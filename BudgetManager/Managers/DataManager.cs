@@ -63,19 +63,49 @@ namespace projekttest.Managers
                     if (loadedData != null)
                     {
                         GlobalData.AllIncomes.Clear();
-                        if (loadedData.Incomes != null) GlobalData.AllIncomes.AddRange(loadedData.Incomes);
+                        if (loadedData.Incomes != null)
+                        {
+                            foreach (var item in loadedData.Incomes)
+                            {
+                                item.Id = 0;
+                                if (item.Category != null) item.Category.Id = 0;
+                                if (item.Person != null) item.Person.Id = 0;
+                            }
+                            GlobalData.AllIncomes.AddRange(loadedData.Incomes);
+                        }
 
                         GlobalData.AllExpenses.Clear();
-                        if (loadedData.Expenses != null) GlobalData.AllExpenses.AddRange(loadedData.Expenses);
+                        if (loadedData.Expenses != null)
+                        {
+                            foreach (var item in loadedData.Expenses)
+                            {
+                                item.Id = 0;
+                                if (item.Category != null) item.Category.Id = 0;
+                                if (item.Person != null) item.Person.Id = 0;
+                            }
+                            GlobalData.AllExpenses.AddRange(loadedData.Expenses);
+                        }
 
                         GlobalData.Categories.Clear();
-                        if(loadedData.Categories != null) GlobalData.Categories.AddRange(loadedData.Categories);
+                        if (loadedData.Categories != null)
+                        {
+                            foreach (var item in loadedData.Categories) item.Id = 0;
+                            GlobalData.Categories.AddRange(loadedData.Categories);
+                        }
 
                         GlobalData.People.Clear();
-                        if (loadedData.People != null) GlobalData.People.AddRange(loadedData.People);
+                        if (loadedData.People != null)
+                        {
+                            foreach (var item in loadedData.People) item.Id = 0;
+                            GlobalData.People.AddRange(loadedData.People);
+                        }
 
                         GlobalData.Goals.Clear();
-                        if (loadedData.Goals != null) GlobalData.Goals.AddRange(loadedData.Goals);
+                        if (loadedData.Goals != null)
+                        {
+                            foreach (var item in loadedData.Goals) item.Id = 0;
+                            GlobalData.Goals.AddRange(loadedData.Goals);
+                        }
 
                         MessageBox.Show("Dane zostały pomyślnie wczytane!", "Sukces!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

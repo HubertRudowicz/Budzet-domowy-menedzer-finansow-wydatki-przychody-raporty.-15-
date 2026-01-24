@@ -36,7 +36,7 @@ namespace projekttest.Forms
             btnGoToRegister = new Button 
             { 
                 Text = "Zarejestruj się", 
-                Location = new Point(190, 240), // Center X: (500-250)/2 = 125. Y=270 (10px below Login/Cancel)
+                Location = new Point(190, 240),
                 Width = 250, 
                 Height = 35,
                 FlatStyle = FlatStyle.Flat,
